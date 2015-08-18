@@ -1,0 +1,9 @@
+.navigator{:style => "margin-top: 20px;"}
+  %ul
+    %li.heading.active OTHER LISTS BY {{user.username}}
+    %li
+      %ul{"ng-repeat" => "list in user.lists"}
+        %li 
+          {{$index + 1}}. 
+          %a{"ng-href" => "/lists/{{list.slug}}"}{{list.name}}
+.clear

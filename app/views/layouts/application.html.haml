@@ -1,0 +1,34 @@
+!!!
+%html
+  %head
+    %title Intralist
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}
+    = favicon_link_tag "intralist_favicon.ico"
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = javascript_include_tag "//use.typekit.net/fls3qsy.js"
+    = csrf_meta_tags
+    = render :partial => 'shared/mix_panel'
+  %body
+  = render :partial => "shared/navbar"
+  #page-content
+    .container.bordered
+      - flash.each do |k, v|
+        = content_tag :div, v, class: "alert alert-success"
+      .row
+        .col-xs-12.col-sm-12.col-md-12.col-lg-12
+          = yield
+          = render :partial => 'shared/facebook_javascript_sdk'
+
+        .page-js
+          = yield :page_javascript
+
+
+    :javascript
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-39839253-1', 'intralist.com');
+      ga('send', 'pageview');

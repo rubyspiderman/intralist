@@ -1,0 +1,33 @@
+#search-results
+  .row
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+      %h1.breadcrumb.pull-left SEARCH RESULTS
+    .clear
+    .col-xs-12.col-sm-6.col-md-8
+      = render :partial => 'search/filters'
+
+      - if @users.present?
+        %h3
+          Users
+        - @users.each do |user|
+          = render :partial => 'search/user', :locals => {:user => user}
+
+
+      - if @lists.present?
+        %h3
+          Lists
+        - @lists.each do |list|
+          = render :partial => 'search/list', :locals => {:list => list}
+
+
+      - if @intralists.present?
+        %h3
+          Intralists
+        - @intralists.each do |intralist|
+          = render :partial => 'search/intralist', :locals => {:list => intralist}
+      .pagination
+        = paginate @paginatable_entity
+    .col-xs-6.col-md-4
+      #right-column
+        .clear
+

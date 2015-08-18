@@ -1,0 +1,30 @@
+#lists
+  .list.row.user-block{'data-url' => "#{list.permalink}"}
+    .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      .list-metadata.pull-left
+        = image_tag("intralist_icon_small.png", :width => 25)
+        / .created-by.pull-left
+        /   = link_to list.creator_name, "/#{list.creator_name}"
+      .clear
+      %h4.pull-left.list-name
+        = list.name
+    .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8
+      .cover-image{"ng-class" => "{highlight: list.items[0].id == currentItemId}"}
+        - if profile_image = intra_list_profile_image(list)
+          = image_tag profile_image, :height => "200"
+        - else
+          = image_tag('no_item_photo.gif', :width => "220")
+    .c.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-lg-push-4.col-lg.push-4
+.clear
+
+/ .user-block.col-md-12{:style => 'margin-top:5px;padding:5px;', 'data-url' => "#{list.permalink}"}
+/   .user-logo.pull-left.col-md-2
+/     - if profile_image = intra_list_profile_image(list)
+/       = image_tag profile_image, :class => 'img-thumbnail'
+/     - else
+/       = image_tag('http://placehold.it/140x100')
+/   .user-details.col-md-10
+/     %span
+/       %strong
+/         = list.name
+

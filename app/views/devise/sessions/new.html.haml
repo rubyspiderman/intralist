@@ -1,0 +1,33 @@
+.row
+  .span11
+    .body-content-static
+      %h2 Have an account?  Log in here
+.row
+  .span6
+    = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => 'form-horizontal'}) do |f|
+      .control-group
+        %label.control-label Username:
+        .controls
+          = f.text_field :login
+      .control-group
+        %label.control-label Password:
+        .controls
+          = f.password_field :password
+      - if devise_mapping.rememberable?
+        .control-group
+          .controls{:style => "width: 100%"}
+            %label.checkbox
+              = f.check_box :remember_me
+              Remember me
+            = f.submit "Log in", :class => "btn"
+  .span5
+    .mid-header ...or you can log in with social
+    = link_to(image_tag('facebook_signin.png'), '/users/auth/facebook')
+    .field{:style => 'margin-top: 20px'}
+      = link_to(image_tag('twitter_signin.png'), '/users/auth/twitter')
+    %dl.account
+      %dt Don't have an account?
+      %dd= link_to "Create an Intralist account", new_user_registration_path
+      %dt Forgot your password?
+      %dd= link_to "Click here to reset it", new_user_password_path
+.clearfix{:style => 'height: 50px'}

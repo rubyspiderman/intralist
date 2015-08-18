@@ -1,0 +1,26 @@
+#lists
+  .list.row.user-block{'data-url' => "#{user.permalink}"}
+    .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      %h4.pull-left.list-name
+        = "#{user.full_name} - #{user.username}"  
+      %p.description
+        = user.profile_description
+    .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8
+      .cover-image
+        = image_tag user.avatar_url.gsub(/\?(.*)/, "?type=large"), :width => 200
+    .c.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-lg-push-4.col-lg.push-4
+.clear
+
+
+/ .user-block.col-md-12{:style => 'margin-top:5px;padding:5px;', 'data-url' => "#{user.permalink}"}
+/   .user-logo.pull-left.col-md-2
+/     - if user.profile && user.profile.avatar
+/       = image_tag user.profile.avatar, :class => 'img-thumbnail'
+/     - else
+/       = image_tag('http://placehold.it/140x100')
+/   .user-details.col-md-10
+/     %span
+/       %strong
+/         = user.username
+
+/ = image_tag user.avatar_url.gsub(/\?(.*)/, "?type=large"), :width => 200

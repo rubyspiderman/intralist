@@ -1,0 +1,6 @@
+#lists
+  %div{"ng-controller" => "NewListCtrl", "ng-include" => "'partials/new_list.html'", "ng-show" => "creatingList"}
+  %div{"ng-controller" => "NewRequestCtrl", "ng-include" => "'partials/new_request_form.html'"}
+  %div{"ng-repeat" => "list_group in list_groups"}
+    .list.row{"i-toggle-list"=> true, "ng-controller" => "ListGroupCtrl", "ng-include" => "'partials/list_group.html'", "ng-if" => "!list_group.request", "ng-mouseenter" => "listHover = true", "ng-mouseleave" => "listHover = false"}
+    .request.row{"i-toggle-list"=> true, "ng-controller" => "RequestListGroupCtrl", "ng-include" => "'partials/request_list_group.html'", "ng-if" => "list_group.request"}

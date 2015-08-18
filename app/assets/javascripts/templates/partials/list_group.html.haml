@@ -1,0 +1,127 @@
+.show-list
+  .list-container
+    .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      .list-metadata.pull-left
+        .list-info{"ng-if" => "!list.is_intralist"}
+          .list-user-image.pull-left
+            %a{"ng-href" => "/{{list.user.username}}"}
+              %img{"ng-src" => "{{list.user.avatar_url}}", :width => "25", :class => "pull-left creator-image"}
+          .list-user-info.pull-left
+            .pull-left
+              ="{{list.request_id && 'response' || list.parent_list_id && 'copied' || 'created' }} by"
+              %a{"ng-href" => "/{{list.user.username}}"}="{{list.user.username}}"
+            .pull-left
+              .dropdown{"ng-if" => "!((current_user_name == list.user.username) && currentConnectedListIndex > 0)"}
+                .glyphicon.glyphicon-chevron-down.dropdown-toggle{:id => 'dropdownmenu1', :data => {"toggle" => "dropdown"}}
+                %ul.dropdown-menu{"aria-labelledby" => "dropdownmenu1", role: "menu"}
+                  %li{role: "presentation", "ng-if" => "current_user_name != list.user.username"}
+                    %a{href: "#", role: "menuitem", tabindex: "-1"} Follow {{list.user.username}}
+                  %li{role: "presentation", "ng-if" => "current_user_name != list.user.username"}
+                    %a{href: "#", role: "menuitem", tabindex: "-1"} Report
+                  %li{role: "presentation", "ng-if" => "current_user_name == list.user.username"}
+                    / TODO: consolidate conditional logic
+                    %a{"ng-if" => "freshCopy && props.state != 'editingFreshCopy'", "ng-click" => "props.state = 'editingFreshCopy'"}
+                      Edit
+                    %a{"ng-if" => "!freshCopy", "ng-click" => "editList()"}
+                      Edit
+                  %li{role: "presentation", "ng-if" => "current_user_name == list.user.username"}
+                    %a{"ng-click" => "confirmListDelete()", role: "menuitem", tabindex: "-1"} Delete
+                  %li{role: "presentation", "ng-if" => "current_user_admin == 'true'"}
+                    %a{"ng-click" => "openPromote()", "ng-if" => "list.promoted == false"} Promote List
+                    %a{"ng-click" => "openUnpromote()", "ng-if" => "list.promoted == true"} Un-promote List
+            %br
+            .when="{{list.created_at_in_words}}"
+          .pull-right.view-intralist{"ng-if" => "(props.state == 'viewingConnectedList') && list_group.intralist.items.length"}
+            %a{"ng-click" => "viewIntralist()"}
+              %img{:src => "../assets/intralist_icon_small.png", :width => "25", :class => "intralist-indicator"}
+        .intralist-info{"ng-if" => "list.is_intralist"}
+          .list-user-image.pull-left
+            %img{"ng-src" => "assets/intralist_icon_small.png", :width => "25", :class => "pull-left"}
+          .list-user-info.pull-left
+            Powered by {{ list_group.intralist.list_count }} Lists
+            %br
+            .when="{{list.created_at_in_words}}"
+          .pull-right
+            %div{"ng-show" => "(props.state == 'viewingIntralist') && props.expanded"}
+              %a{"ng-click" => "viewMain('next')"}
+                %span.pull-right.control-label.back-to-list < Back to list
+      .clear
+      .name-and-description.clearfix{"ng-class" => "{'fixed-height': !props.expanded}", "ng-show" => "['editing', 'editingFreshCopy'].indexOf(props.state) == -1"}
+        %h4.pull-left 
+          {{list.name}}
+          %a{"ng-href" => "/#/lists/{{list.slug}}", "ng-show" => "!viewingIndividual"}
+            %span.glyphicon.glyphicon-new-window.small-glyph
+        .pull-left.list-carousel-index.open-carousel-controls{"ng-show" => "list_group.lists.length > 1 && props.expanded && (['viewingIntralist', 'editing', 'copying', 'editingFreshCopy'].indexOf(props.state) == -1)"}
+          .connected-carousel-controls
+            %a.left.carousel-control{"ng-click" => "prevConnList()"}
+              %span.icon-prev
+            .connected-count="LIST ({{currentListIndex + 1}}/{{list_group.lists.length}})"
+            %a.right.carousel-control{"ng-click" => "nextConnList()"}
+              %span.icon-next
+        .list-description.clear
+          %div{"ng-if" => "!props.expanded", "ng-class" => "{'cursor-click' : list.description.length > 70}"} {{list.description | cut:true:70:'...'}}
+          %div{"ng-if" => "props.expanded"} {{list.description}}
+        .content-source-name
+          %a{:href => "{{list.content_source_url | hrefUrl}}", :target => "_blank"} {{list.content_source_name | uppercase}}
+      .list-controls-closed{"ng-hide" => "props.expanded", "ng-include" => "'partials/list_controls.html'"}
+ 
+    .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8{"ng-include" => "'partials/item_thumbnails.html'"}
+    .c.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      .list-body{"ng-show" => "props.expanded", "data-id" => "{{list.id}}", "set-ng-animate" => false}
+        %div{"style" => "text-align: center;", "ng-show" => "(props.state == 'fetchingConnectedLists')"}
+          %img.spinner{:src => "assets/spinner.gif", :style => "margin: auto; display: block;"}
+        %div{"style" => "text-align: center;"}
+          %carousel.main-carousel{"carousel-name" => "'outerList'"}
+            %slide.connected-list-slide
+              %div{"ng-if" => "['viewingConnectedList', 'copying', 'viewingIntralist', 'viewingFreshCopy', 'editing', 'editingFreshCopy'].indexOf(props.state) != -1"}
+                %carousel.connected-list-carousel{"carousel-name" => "'connectedLists'", "external-controls" => 'true'}
+                  %slide{"ng-repeat" => "list in list_group.lists.slice(1)"}
+                    .items
+                      %ol
+                        %li{"ng-repeat" => "item in list.items", "ng-include" => "'partials/list_item.html'"}
+                  %slide.main-list-slide
+                    .edit-list-form{"ng-include" => "'partials/edit_list.html'",
+                      "ng-if" => "props.state == 'editing'"}
+                    .main-list{"ng-show" => "props.state != 'editing'"}
+                      .items
+                        %ol
+                          %li{"ng-repeat" => "item in mainList.items", "ng-include" => "'partials/list_item.html'"}
+            %slide.copy-slide
+              %a{"ng-if" => "freshCopy && props.state != 'editingFreshCopy'",
+                 "ng-click" => "props.state = 'editingFreshCopy'",
+                 "style" => "float: right;"}
+                EDIT
+              .edit-fresh-copy-form{"ng-include" => "'partials/edit_list.html'",
+                "ng-if" => "props.state == 'editingFreshCopy'"}
+              .new-copy-form{"ng-include" => "'partials/list_form.html'",
+                "ng-controller" => "NewListCtrl",
+                "ng-if" => "props.state == 'copying'"}
+              .items{"ng-show" => "freshCopy && props.state != 'editingFreshCopy'"}
+                %ol
+                  %li{"ng-repeat" => "item in freshCopy.items", "ng-include" => "'partials/list_item.html'"}
+            %slide.intralist-slide
+              .items
+                %ol
+                  %li{"ng-repeat" => "item in list_group.intralist.items", "ng-include" => "'partials/list_item.html'"}
+        %div{"ng-show" => "['copying', 'editing', 'editingFreshCopy'].indexOf(props.state) == -1"}
+          .list-controls{"ng-include" => "'partials/list_controls.html'"}
+          .clear
+          .pull-left{:style => "margin-right: 4px;"}
+            share to:
+          .pull-left
+            %i-share{'i-share-title' => '{{list.name}}', 'i-share-slug' => '{{list.slug}}', 'i-share-cover-image' => '{{list.items[0].image_thumb_url}}', 'i-share-path' => 'lists'}
+          .clear
+          %div{:style => "height: 4px;"}
+          .clear
+          .tags
+            .pull-left tags:
+            %span{"ng-if" => "props.state == 'viewingFreshCopy'"}
+              %a.pull-right{"ng-click" => "viewMain('prev')"}="< Back to list"
+            %span{"ng-if" => "(props.state == 'viewingConnectedList') && props.copyCreated"}
+              %a.pull-right{"ng-click" => "backToCopy()"}="Back to copy >"
+            %ul.pull-left
+              %li{"ng-repeat" => "tag in list.tags"}
+                %a{:href =>"/tags/\{{tag}}"}="#\{{tag}}"
+          .clear
+          .comments{"ng-controller" => "CommentsCtrl", "ng-include" => "'partials/comments.html'"}
+

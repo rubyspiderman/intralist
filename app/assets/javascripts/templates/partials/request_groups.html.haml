@@ -1,0 +1,20 @@
+-# FIXME
+#requests
+  %div{"ng-controller" => "NewRequestCtrl", "ng-include" => "'partials/new_request_form.html'"}
+  .request.row{"ng-repeat" => "request in requests", "i-toggle-list"=> true, "ng-show" => "request.name"}
+    .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4 
+      .request-metadata.pull-left
+        .creator.pull-left
+          %a{:href => "/{{request.user.username}}"}
+            %img{"ng-src" => "{{list.user.avatar_url}}", :width => "25", :class => "pull-left creator-image"}
+          .created-by.pull-left
+            created by
+            %a{:href => "/{{request.user.username}}"}="{{request.user.username}}"
+        .pull-right.time-created
+          ="{{request.created_at_in_words}}"
+      .clear
+      %h4.pull-left {{request.name}}
+      .clear
+    .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8
+      .cover-image
+        %img{"ng-src" => "{{list.items[0].image_url}}", :class => "img-responsive"}/

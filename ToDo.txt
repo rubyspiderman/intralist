@@ -1,0 +1,26 @@
+render :text => omniauth["info"]["image"] - need to store this somewhere.
+
+12/23/12
+
+- Add description to profile
+- Homepage (not logged in) can have the categories + tagline + registration / login - "top 5 lists for everything"
+- Homepage (logged in) all the activity from people you follow + we have activity indicator (shows who's done what)
+- Add news feed (see who is commented on your list or favorited your list)
+
+1/8/12
+
+- user/:user_id/follow <- user_id is the follower's id
+- user/:user_id/unfollow <- user_id is the follower's id
+- user/:user_id/followers
+- user/:user_id/following
+
+- fix comments with the .media class - how can we get user info?  Should we embed the image associated with comments?  Maybe post on Stackoverflow and mention the embedded comments example.  What about user image?
+
+- not seeing the form to add entries to your list.  This should show by default if: a) there are no entries in your list and you are the list owner.
+
+1/13
+-integrate Bower for front end dependency management at some point
+-ensure appropriate indexes are in place
+-port over search functionality/autocomplete
+-performance monitoring with newRelic
+-error handling service.  HoneyBadger?

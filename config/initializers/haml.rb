@@ -1,0 +1,2 @@
+# added this to support HAML templates for Angular: http://stackoverflow.com/questions/18752197/how-to-use-angularjs-routes-with-haml-templates-in-a-rails-app
+Rails.application.assets.register_engine '.haml', Tilt::HamlTemplate

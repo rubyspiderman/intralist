@@ -1,0 +1,45 @@
+= content_for :right_column do
+  #right-column-module
+    .body
+      %h4 Customize Profile
+      %hr
+      = form_for @profile, :url => save_customization_user_profile_path, :html => {:method => :put, :multipart => true} do |f|
+        .field
+          = f.label :background_color
+          = f.text_field :background_color
+          = link_to 'Reset', "javascript:void(0)", :onclick => "resetColor('profile_background_color')"
+        .field
+          = f.label :background_image
+          = f.file_field :background_image
+          - unless @profile.background_image.url.nil? || @profile.background_image.url.blank?
+            = image_tag(@profile.background_image.url,  :style => 'width:50px;')
+            = f.check_box 'remove_background_image'
+            Remove Background Image
+        .field
+          = f.label :background_repeat
+          = f.select :background_repeat, options_for_select(['repeat', 'no-repeat', 'repeat-x', 'repeat-y', 'round']), :include_blank => 'Select position'
+        = hidden_field_tag 'theme_image'
+        = f.submit 'Save'
+= content_for :templates do
+  = render :partial => 'items/new_template'
+%span.page-header PERSONALIZE
+%hr.body{:style => 'margin-top: 5px'}
+%p
+  Customize how your Intralist profile and lists look to other users
+%p
+  Choose a theme below or customize your own using the panel in the right column
+- unless @themes.empty? || @themes.nil?
+  %ul
+    - @themes.each do |theme|
+      .pull-left{:style => 'margin: 10px'}
+        %center
+          = image_tag theme.background_image.thumb.url, :class => "img-polaroid", :style => 'width: 50px' unless theme.background_image.url.nil?
+          %br
+          = link_to theme.name, 'javascript:void(0)', :onclick => "previewTheme('#{theme.id}')", :data => {:theme => theme}, :id => "previewTheme#{theme.id}"
+
+
+
+
+- unless @user.profile.nil?
+  %p.hide{:id => 'user_profile', :data => {:profile => @user.profile.to_json}}
+

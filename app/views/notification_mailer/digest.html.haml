@@ -1,0 +1,14 @@
+%table{:cellspacing => "15", :cellpadding => "5"}
+  - @notifications.each do |n|
+    %tr
+      %td
+        = image_tag(n.image)
+      %td
+        = raw(n.body)
+        = distance_of_time_in_words_to_now(n.created_at)
+%table{:width => "100%", :cellspacing => "15", :cellpadding => "5"}
+  %tr
+    %td
+      To no longer receive a digest of Inralist activity related to you, 
+      = link_to 'click here', "http://intralist.dev/unsubscribe/?email=#{@user.email}&token=#{@user.utility_token}"
+

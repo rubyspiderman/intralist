@@ -1,0 +1,27 @@
+%span.page-header.pull-left SOCIAL
+.page-nav
+  %ul
+    %li= page_nav("FOLLOWING", user_following_index_path(current_user))
+    %li= page_nav("FRIENDS", user_friends_path(current_user))
+    %li= page_nav("FOLLOWERS", user_followers_path(current_user))
+%hr.body
+.clearfix
+%p Here are your friends from Facebook and Twitter that use Intralist.
+
+- unless @intralists.count == 0
+  - @intralists.each do |user|
+    = render :partial => "/shared/user", :locals => {:user => user}
+
+- else
+  - if current_user.authorizations.count == 0
+    %p To find Facebook and Twitter friends on Intralist, you must first connect your accounts by clicking one of the links below
+  .tab-pane#facebook
+  - if current_user.connected_with_provider('facebook')
+    %p.findFacebookFriends= link_to 'Find Facebook Friends', 'javascript:void(0)', :onclick => "searchFriends('#{current_user.id}', 'facebook')"
+  - else
+    %p= link_to 'Connect with facebook', omniauth_authorize_path(User, 'facebook')
+  .tab-pane#twitter
+  - if current_user.connected_with_provider('twitter')
+    %p.findTwitterFriends= link_to 'Find Twitter Friends', 'javascript:void(0)', :onclick => "searchFriends('#{current_user.id}', 'twitter')"
+  - else
+    %p= link_to 'Connect with twitter', omniauth_authorize_path(User, 'twitter')

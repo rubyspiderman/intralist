@@ -1,0 +1,5 @@
+%ul.follows
+  - follows.each do |f|
+    %li
+      = image_tag f.image, :width => 30
+      = link_to f.username, user_path(f.user_id), :style => "margin-left: 5px"

@@ -1,0 +1,12 @@
+%ul{:role => "menu"}
+  %li
+    Choose a local picure
+    %span.btn.btn-default.btn-file
+      Browse
+      %input{:type => "file", "ng-file-select" => "onFileSelect($files)", :name => "profile[image]"} 
+      / http://jsfiddle.net/X3S4a/
+  %li ...or...
+  %li{"ng-repeat" => "authorization in user.authorizations"}
+    %a{"ng-click" => "setAvatar(authorization.provider)"} Use {{authorization.provider}} picture
+    / this should set the image_display attribute to "facebook"
+    / Should update the UI instantly too - means the serializer should show those images probably

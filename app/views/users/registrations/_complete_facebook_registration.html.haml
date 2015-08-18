@@ -1,0 +1,27 @@
+.center-block
+  .row
+    .col-xs-12.col-sm-6.col-md-12
+      %p.header-message.bg-primary{:style => 'padding:5px;'}
+
+      .center-block
+        .pull-left.facebook-image{:style => "margin-top: 6px"}
+
+        .pull-left{:style => "margin-left: 30px; width:80%"}
+          = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => "form-horizontal",
+                                  :id => "complete-registration-modal"}) do |f|
+            = devise_error_messages!
+            = f.hidden_field :email, :class => 'complete-registration-form-email'
+            = f.hidden_field :birthday, :class => 'complete-registration-form-dob'
+
+            .form-group
+              %label Username:
+              = f.text_field :username, :class => "form-control"
+            .form-group
+              %label Password:
+              = f.password_field :password, :class => "form-control"
+            .form-group
+              %label Confirm Password:
+              = f.password_field :password_confirmation, :class => "form-control"
+
+            .form-group
+              = f.submit "SIGN UP", :class => 'btn btn-primary pull-right'

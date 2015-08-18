@@ -1,0 +1,10 @@
+.spacer{"ng-show" => "list_group.related_lists.length > 0"}
+.navigator{"ng-show" => "list_group.related_lists.length > 0"}
+  %ul
+    %li.heading.active RELATED LISTS
+    %li
+      %ul{"ng-repeat" => "l in list_group.related_lists | limitTo:5"}
+        %li 
+          {{$index +1}}. 
+          %a{"ng-href" => "/lists/{{l.slug}}"}{{l.name}}
+.clear

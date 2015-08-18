@@ -1,0 +1,8 @@
+#search-results
+  .row
+    .navbar.navbar-default.filter-search
+      %ul.nav.navbar-nav
+        %li= link_to 'All Results', "/search?q=#{params[:q]}&page=#{params[:page]}"
+        %li= link_to 'Users', "/search?q=#{params[:q]}&page=#{params[:page]}&f=user"
+        %li= link_to 'Lists', "/search?q=#{params[:q]}&page=#{params[:page]}&f=list"
+        %li= link_to 'Intralists', "/search?q=#{params[:q]}&page=#{params[:page]}&f=intralist"

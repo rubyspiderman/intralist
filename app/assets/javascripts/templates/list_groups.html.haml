@@ -1,0 +1,18 @@
+#feed
+  .row
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+      %h1.breadcrumb.pull-left {{dashStripper(breadcrumb) | uppercase}}
+    .clear
+    %i.throbber{"ng-show" => "props.loading"}
+  .row{"i-scroll" => "loadMore()"}
+    .col-xs-12.col-sm-6.col-md-8
+      %div{"ng-include" => "'partials/list_groups.html'"}
+
+      #all-lists-fetched{"ng-show" => "props.allListsFetched"}
+        %i="no more lists to load"
+    .col-xs-12.col-md-4.text-center
+      #right-column
+        %tip
+        %br
+        %div{"ng-include" => "'partials/footer.html'"}
+        .clear

@@ -1,0 +1,10 @@
+.modal-header
+  %h3 Promote this list?
+.modal-body
+  %p Click 'OK' to promote this list on the homepage.  Check 'include in carousel' to have the list appear in the homepage carousel.
+  .checkbox
+    %label
+      %input{:type => "checkbox", "ng-model" => "list.carousel"} Include on homepage
+.modal-footer
+  %button.btn.btn-primary{"ng-click" => "ok()"} OK
+  %button.btn.btn-warning{"ng-click" => "cancel()"} Cancel

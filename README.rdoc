@@ -1,0 +1,9 @@
+Intralist is a platform for discovering and creating lists.
+
+Intralist requires the following system dependencies:
+-mongodb
+-imagemagick
+-elasticsearch
+
+Gotchas:
+-While developing, you must be connected to the internet in order to upload images, since the development environment will also store images on S3.

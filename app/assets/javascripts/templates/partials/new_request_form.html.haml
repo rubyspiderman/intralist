@@ -1,0 +1,17 @@
+.row{"ng-show" => "creatingRequest"}
+  .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4 
+    .list-form
+      %form{"ng-submit" => "createRequest()", :class => "form-inline"}
+        .form-group
+          .name
+            %input{:type => "text", :class => "form-control", :placeholder => 'Name the list you want to request (Ex. "Best NYC Restaurants")',
+              "ng-model" => "request.name", :autofocus => true, "ng-minlength" => "5", "ng-maxlength" => "200",
+              "required" => true}
+            %div{"i-add-description" => true, "ng-model" => "request", "item-index" => "54", "focus-item-index" => "focusItemIndex"}
+          .small-space
+            &nbsp;
+          %input{:type => "submit", :class => "btn btn-primary", "value" => "PUBLISH"}
+          %a{:href => "", "ng-click" => "toggleNewRequest()", "ng-show" => "creatingRequest"}="Cancel"
+  .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8
+    %img{:src => "/assets/requests.png", :class => "img-responsive"}
+

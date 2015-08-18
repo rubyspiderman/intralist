@@ -1,0 +1,8 @@
+.modal-header
+  %h3 Un-promote list
+.modal-body
+  %p By clicking 'OK' you will remove this list from showing on the homepage.  If you had specified the 'show in carousel' option for this list, this will be removed too.  To remove this list from the carousel but keep it on the homepage, click 'OK' to unpromote the list, the re-promote the list without the 'show in carousel' option selected.
+
+.modal-footer
+  %button.btn.btn-primary{"ng-click" => "ok()"} OK
+  %button.btn.btn-warning{"ng-click" => "cancel()"} Cancel

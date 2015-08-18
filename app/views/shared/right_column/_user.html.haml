@@ -1,0 +1,17 @@
+#right-column-module.set-width
+  .body
+    .left
+      = render :partial => "shared/profile_image", :locals => {:user => user}
+    .left{:style => 'margin: 6px 0 0 6px;'}
+      = link_to user.username, user_lists_path(user)
+    .right
+      - if user_signed_in? && user.id != current_user.id
+        - if in_followers?(current_user.following, user)
+          = button_to "unfollow", unfollow_user_path(user), :method => 'delete', :form => {:id => 'unfollow_form'}, remote: true, :class => 'btn', :id => 'unfollow', :name => 'unfollow_button', "data-list-creator-id" => "#{user.id}"
+        - else
+          = button_to "follow", follow_user_path(user), remote: true, :form => {:id => 'follow_form'}, :class => 'btn', :id => 'follow', :name => 'follow_button', "data-list-creator-id" => "#{user.id}"
+    .clearfix
+
+
+
+

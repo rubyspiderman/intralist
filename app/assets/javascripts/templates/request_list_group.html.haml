@@ -1,0 +1,23 @@
+#feed
+  .row
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+      %h1.breadcrumb.pull-left REQUEST: {{dashStripper(breadcrumb) | toTitleCase}}
+    .clear
+    %i.throbber{"ng-show" => "props.loading"}
+  .row{"i-scroll" => "loadMore()"}
+    .col-xs-12.col-sm-6.col-md-8
+      .alert.alert-info.alert-dismissible.alert-request{:role => "alert", "ng-if" => "!current_user_name"}
+        %button.close{"data-dismiss" => "alert", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+          %span.sr-only Close
+        %strong Welcome to Intralist!
+        Your friend requested help creating a list of the '{{list.name}}.'  Click 'respond' to register an account and help them out!
+      #lists
+        .request.row{"ng-controller" => "RequestListGroupCtrl", "ng-include" => "'partials/request_list_group.html'"}
+      #all-lists-fetched{"ng-show" => "props.allListsFetched"}
+        %i="no more lists to load"
+    .col-xs-6.col-md-4
+      #right-column
+        %tip
+        %div{"ng-include" => "'partials/footer.html'"}
+        .clear

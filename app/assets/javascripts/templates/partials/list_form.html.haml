@@ -1,0 +1,61 @@
+.list-form
+  %form{"ng-submit" => "saveList()", :class => "form-inline",
+    :novalidate => "true", :name => "listForm", "i-validate-at-least-one-item" => true,
+    "enctype" => "multipart/form-data"}
+    .form-group{"ng-class" => "{'has-error has-feedback' : listForm.name.$error.maxlength}"}
+      .name{"ng-show" => "(props.state != 'copying') && (props.state != 'responding')", "ng-controller" => "NameCtrl"}
+        %label{:class => "control-label", :for => "name", "ng-show" => "listForm.name.$error.maxlength"} The name is too long
+        %input{:type => "text", :class => "form-control length", :placeholder => "Enter list name",
+          "ng-model" => "list.name", :autofocus => true, "ng-minlength" => "5", "ng-maxlength" => "84",
+          "required" => true, "ng-blur" => "validateName()", "ng-focus" => "changeFocus(54)", :name => "name",
+          "typeahead" => "name for name in fetchNames($viewValue)", "aria-describedby" => "name"}
+        %div{"i-add-description" => true, "ng-model" => "list", "item-index" => "54", "focus-item-index" => "focusItemIndex"}
+      //Q: I previously had ng-model on the ng-repeat.  It works in either place?
+    .items{"ui-sortable" => true, "ng-model"=> "list.items"}
+      .item{"ng-repeat" => "item in list.items", "ng-controller" => "NewListItemCtrl"}
+        .container{"ng-mouseover" => "hovering(true)", "ng-mouseout" => "hovering(false)"}
+          .counter
+            .glyphicon.glyphicon-random{"ng-show" => "props.hovered"}
+            %span{"ng-show" => "!props.hovered"} {{$index + 1}}.
+          %input{:type => "text", :class => "form-control in-line-counter length", :placeholder => "item",
+            "ng-model" => "item.name", "i-validate-uniqueness" => true,
+            "ng-focus" => "active.item = item; changeFocus($index); hideDescLink()", :name => "item_{{$index}}"}
+          %a.add-link{"ng-click" => "props.showLinkControls = !props.showLinkControls"} LINK
+          %a.add-photo{"ng-click" => "props.showPhotoControls = !props.showPhotoControls"}
+            %span.glyphicon.glyphicon-camera
+          %a.remove-item{"ng-click" => "list.removeItem($index)", "ng-if" => "list.items.length > 1"}
+            %span.glyphicon.glyphicon-remove-circle
+          %div{"i-add-description" => true, "ng-model" => "item", "item-index" => "$index", "focus-item-index" => "focusItemIndex"}
+          .choose-link.additional-field{"ng-show" => "props.showLinkControls"}
+            %input{:type => "text", :class => "form-control length", :name => "link_{{$index}}",
+                   :placeholder => "link your item", "ng-model" => "item.link"}
+          .choose-image.additional-field{"ng-show" => "props.showPhotoControls && !props.imageUploaded && !props.uploadInProgress"}
+            %input{:type => "text", :class => "form-control length", :name => "img_url_{{$index}}",
+                   :placeholder => "paste image link", "ng-model" => "item.image_url",
+                   "ng-paste" => "uploadByImageUrl($event)"}
+            OR
+            %span.btn.btn-default.btn-file
+              Choose file
+              %input{:type => "file", :value => "Upload", :name => "file_{{$index}}", "ng-file-select" => "uploadImage($files)"}
+          %div{"ng-show" => "props.uploadInProgress"}
+            %img.spinner{:src => "assets/spinner.gif",
+                         "ng-show" => "props.uploadInProgress" }
+            %span="Uploading image..."
+          .item-image-preview{"ng-if" => "(draft || props.imageUploaded) && active.item == item && item.image_url"}
+            %img{"ng-src" => "{{item.image_thumb_url}}",
+                 "fallback-src" => "http://windows7.iyogi.com/files/2012/06/Cant-activate-Windows-7-due-to-invalid-product-key-error.jpg"}
+            %a{"ng-click" => "clearImage()"}="X Clear Image"
+    %div{"ng-show" => "list.items.length < 5"}
+      %a{"ng-click" => "list.addEmptyItem()"} + Add Item
+    //We can store ~60,000 tags in here assuming 80 bytes per 20 character
+    //tag with 5MB local storage available.  If we need to scale this to have
+    //a backend fallback, that can easily be added.
+    .form-group
+      .content-source
+        %input{:type => "text", :class => "form-control length", :name => "content_source_url",
+              :placeholder => "Does your list derive from another?  Add link here", "ng-model" => "list.content_source_url"}
+      %tags-input{"ng-model" => "list.tags", :name => "tags_url", :class => "pull-left tags-input", "placeholder" => "Tags, separated by commas", "min-length" => "2"}
+        %auto-complete{"source" => "autoCompletion.fetchTags($query)"}
+    %input{:type => "submit", :class => "btn btn-primary pull-left",
+      "ng-disabled" => "listForm.$invalid || uploadInProgress", "value" => "{{viewText.submitText}}", "ng-click" => "$resetAutoSave()"}
+    %input{:type => "button", :value => "CANCEL", :class => "btn btn-default pull-left", "ng-click" => "cancel();$resetAutoSave()"}

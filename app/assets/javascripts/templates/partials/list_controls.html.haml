@@ -1,0 +1,30 @@
+%ul
+  %li
+    %a{"ng-click" => "current_user_name && list.toggleLike()", "ng-class" => "{liked: list.liked_by_me, logged_out: !current_user_name, authenticate: !current_user_name}"}
+      %div{"popover" => "{{list.voters}}", "popover-trigger" => "mouseenter"} 
+        %span.glyphicon.glyphicon-heart
+          %span.control-label LIKE
+        %span.count  ({{list.likes_count}})
+      / "data-toggle" => "popover", "data-content" => "{{list.voters}}"
+  %li
+    %a
+      %span.glyphicon.glyphicon-comment
+        %span.control-label.comment COMMENTS
+      %span.count ({{list.comments_count}})
+  %li
+    //Q: Why can't I multiline this without a syntax error?
+    %a{"ng-click" => "current_user_name && list.toggleBookmark()", "ng-class" => "{bookmarked: list.bookmarked_by_me, logged_out: !current_user_name, authenticate: !current_user_name}"}
+      %span.glyphicon.glyphicon-bookmark
+        %span.control-label BOOKMARK
+      %span.count ({{list.bookmarks_count}})
+  %li{"ng-if" => "props.state == 'viewingConnectedList' && !props.copyCreated && props.expanded && current_user_name"}
+    %a{"ng-click" => "newListCopy()"}
+      %span.glyphicon.glyphicon-retweet
+        %span.control-label COPY
+  %li{"ng-if" => "props.state == 'viewingConnectedLists'"}
+    %a{"ng-click" => "viewMain()"}
+      %span.control-label BACK TO ORIGINAL
+  %li{"ng-if" => "!props.expanded", "style" => "margin-left: 26px; margin-right: 0px;"}
+    .list-carousel-index{"ng-show" => "(list_group.lists.length > 1) && (!list_group.request)"}
+      %span.control-label= "LIST ({{currentListIndex + 1}}/{{list_group.lists.length}})"
+ 

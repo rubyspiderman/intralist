@@ -1,0 +1,10 @@
+/ .cover-image{"ng-class" => "{highlight: list.items[0].id == currentItemId}"}
+/   %img{"ng-src" => "{{list.items[0].image_thumb_url}}", :class => "img-responsive", "ng-click" => "openCarousel(0)"}/
+
+.cover-image{"ng-class" => "{highlight: list.items[0].id == currentItemId}", :style => "background-image: url('{{list.items[0].image_thumb_url ? list.items[0].image_thumb_url : '/assets/no_item_photo.gif'}}')", "ng-click" => "openCarousel(0)"}
+
+.list-images{"ng-show" => "props.expanded || creatingList"}
+  .list-image-repeater{"ng-repeat" => "item in list.items", "ng-hide" => "$first"}
+    .list-image{"ng-if" => "item.image_url.length > 0", :style => "background-image: url('{{item.image_thumb_url}}');", "ng-click" => "openCarousel($index)", "ng-class" => "{highlight: item.id == currentItemId}"}
+      &nbsp;
+    %br

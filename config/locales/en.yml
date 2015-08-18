@@ -1,0 +1,28 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+          one: moments
+          other: less than %{count} minutes
+      about_x_hours:
+          one: about 1 hour
+          other: about %{count} hours
+      about_x_months:
+          one: 1 month
+          other: "%{count} months"
+      about_x_years:
+          one: about 1 year
+          other: "%{count} years"
+      almost_x_years:
+          one: 1 year
+          other: "%{count} years"
+
+  errors:
+    messages:
+      wrong_size: "is the wrong size (should be %{file_size})"
+      size_too_small: "is too small (should be at least %{file_size})"
+      size_too_big: "is too big (should be at most %{file_size})"
+

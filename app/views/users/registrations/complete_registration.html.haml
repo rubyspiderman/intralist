@@ -1,0 +1,23 @@
+%h1 Complete your registration!
+- if @profile_image
+  = image_tag @profile_image
+= form_for :user, :url => { :action => "update" }, :method => 'put' do |f|
+  - f.fields_for :profile do |profile_field|
+    = profile_field.hidden_field :image, :value => @profile_image
+  %div
+    = f.label :username
+    %br/
+    = f.text_field :username
+  %div
+    = f.label :email
+    %br/
+    = f.email_field :email
+  %div
+    = f.label :password
+    %br/
+    = f.password_field :password
+  %div
+    = f.label :password_confirmation
+    %br/
+    = f.password_field :password_confirmation
+  %div= f.submit "Sign up"

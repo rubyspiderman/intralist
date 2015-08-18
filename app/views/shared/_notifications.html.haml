@@ -1,0 +1,14 @@
+.notifications-list
+  - notifications.group_by {|g| g.group_type}.each do |g, n|
+    - unless g.nil?
+      .header.pull-left= g.pluralize.upcase
+      / .smaller.pull-right
+      /         = link_to "clear", "javascript:;", :data => {:group => g}, :class => "clear-group"
+      .clear{:style => "height: 5px"}
+    - n.each do |n|
+      .media{:class => "#{'read-notification' if current_user.last_notification_id >= n._id rescue nil}", :data => {"notification-id" => n._id}}
+        .pull-left
+          = image_tag n.image ? n.image : asset_path("annonymous_user.jpg"), :class => 'media-object img-polaroid', :width => 35
+        .media-body
+          = n.body.html_safe
+          %span.timestamp= distance_of_time_in_words_to_now(n.created_at)

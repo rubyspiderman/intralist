@@ -1,0 +1,8 @@
+- unless friends.empty? || friends.nil?
+  %ul
+    - friends.each do |friend|
+      %li
+        = friend.name
+
+- else
+  %p No Friends Found

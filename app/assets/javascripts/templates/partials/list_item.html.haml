@@ -1,0 +1,11 @@
+%span{"ng-mouseenter" => "setItemId(item.id)",
+      "ng-mouseout" => "clearItemId()"}
+  %a{"ng-href" => "{{item.link | hrefUrl}}", :target => "_new", "ng-if" => "item.link.length > 0", "ng-mouseenter" => "setItemId(item.id)", "ng-mouseout" => "clearItemId()"}
+    {{item.name}} 
+  %span{"ng-if" => "!item.link", "ng-mouseenter" => "setItemId(item.id)", "ng-mouseout" => "clearItemId()"}
+    {{item.name}} 
+  %span{"ng-if" => "list.is_intralist"}
+    ({{item.count}})
+  .clear.list-item-description
+    %span{"ng-hide" => "showFullText", "ng-click" => "toggleFullText()", "ng-class" => "{'cursor-click' : item.description.length > 70}"} {{item.description | cut:true:70:'...'}}
+    %span{"ng-show" => "showFullText", "ng-click" => "toggleFullText()"} {{item.description}}

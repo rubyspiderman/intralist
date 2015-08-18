@@ -1,0 +1,71 @@
+%img.spinner{"ng-if" => "props.showSpinner", :src => "assets/spinner.gif",
+  :style => "margin: auto; display: block;"}
+%a{"ng-click" => "fetchRemainingComments()",
+   "ng-if" => "!props.viewingRemainingComments && remainingCommentsCount() > 0"} view {{remainingCommentsCount()}} more comments
+
+.media.comment{"ng-repeat" => "comment in list.comments"}
+  .pull-left
+    %img{"ng-src" => "{{comment.image}}", :class => "media-object profile-image"}
+  .media-body
+    .pull-left
+      %span.username {{comment.username}}
+      %span.created-at {{comment.created_at_in_words}}
+    .pull-right
+      %a{"ng-click" => "editComment()", "ng-if" => "comment.username == current_user_name"} Edit
+      %a{"ng-click" => "confirmCommentDelete()",
+         "ng-if" => "comment.username == current_user_name"} Delete
+    .clear
+    %form{"ng-submit" => "updateComment()", :class => "form-inline",
+      :novalidate => "true", :name => "editCommentForm",
+      "ng-show" => "comment.editingComment", :role => "form"}
+      .form-group
+        %label.sr-only{:for => "contentInput", :class => 'sr-only'} Email address
+        %input{:type => "text",
+          :class => "form-control contentInputEdit",
+          'ng-attr-id' => "{{ 'contentInputEdit' + comment.id}}",
+          :placeholder => "comment on this list",
+          "ng-model" => "comment.content",
+          "required" => true,
+          :name => "content",
+          :mentio => "",
+          "mentio-typed-text" => "typedTerm",
+          "mentio-macros" => "macros",
+          "mentio-id" => "'contentInputEdit' + comment.id",
+          }
+        %mentio-menu{ "mentio-for" => "'contentInputEdit' + comment.id", "mentio-trigger-char" => "'@'", "mentio-items" => "people", "mentio-template-url" =>"/people-mentions.tpl" , "mentio-search" => "searchPeople(term)",  "mentio-select" => "getPeopleText(item)" }
+      %button{:type => "submit", :class => "btn btn-default",
+        "ng-disabled" => "editCommentForm.$invalid"} Update
+    .media-heading.comment-text{"ng-show" => "!comment.editingComment", "ng-bind-html" => "comment.content | linky:'_blank' | userMention"}
+
+
+%form{"ng-submit" => "commentForm.$valid && addComment()", :class => "form-inline", 
+      :novalidate => "true", :name => "commentForm", "ng-show" => "!props.editingComment"}
+  .form-group{"ng-show" => "current_user_name.length"}
+    %label.sr-only{:for => "contentInput", :class => 'sr-only'} Comment
+    %input{:type => "text",
+	  :mentio => "",
+	  "mentio-typed-text" => "typedTerm",
+	  "mentio-macros" => "macros",
+      'ng-attr-id' => "{{ 'contentInput' + list.id}}",
+      "mentio-id" => "'contentInput' + list.id",
+      :class => "form-control contentInput",
+      :placeholder => "comment on this list",
+      "ng-model" => "comment.content",
+      "required" => true,
+      :name => "content"}
+    %mentio-menu{ "mentio-for" => "'contentInput' + list.id", "mentio-trigger-char" => "'@'", "mentio-items" => "people", "mentio-template-url" =>"/people-mentions.tpl" , "mentio-search" => "searchPeople(term)",  "mentio-select" => "getPeopleText(item)" }
+    %button{:type => "submit", :class => "btn btn-primary", 
+      "ng-disabled" => "commentForm.$invalid"} Submit
+
+    //TODO: This should just show the user the login modal rather than doing a full redirect
+  %a{"href" =>"/users/login", "ng-if" => "!current_user_name.length", :class => "authenticate"} Login to post a comment
+
+%script{ :type => "text/ng-template", :id =>"/people-mentions.tpl" }
+  %ul{:class =>"list-group user-search" }
+    %li{ "mentio-menu-item" => "user", "ng-repeat" => "user in items",  :class=> "list-group-item"}
+      %div.list-group-item-wrapper
+        %img{"ng-src" => "{{user.avatar_url}}", "class" => "user-suggest-photo"}
+        %span.text-user{ "ng-bind-html" => " '@' + user.username | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"}
+        %br
+        %span.text-primary{ "ng-bind-html" => "user.full_name| mentioHighlight:typedTerm:'menu-highlighted' | unsafe"}
+        %br{"clear" => "all"}

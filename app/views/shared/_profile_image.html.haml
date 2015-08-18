@@ -1,0 +1,8 @@
+.img-polaroid
+  %a{:href => "#{user_path(user)}"}
+    / .media-object.profile-image{:style => "background: url(#{has_profile_image?(user) ? user.profile.avatar : asset_path('annonymous_user.jpg')}); background-size: 35px auto; width: 35px; height: 35px;"}
+    .media-object.profile-image
+      = image_tag has_profile_image?(user) ? user.profile.avatar : asset_path('annonymous_user.jpg'), :height => 35, :width => 35
+
+
+

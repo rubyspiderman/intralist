@@ -1,0 +1,89 @@
+window.intralist = angular.module "Intralist", ["angularFileUpload", "ngResource", "ngAnimate", "ngRoute", "ngSanitize", "ui.bootstrap", "ui.bootstrap.setNgAnimate", "ui.sortable", 'ngTagsInput', 'templates', "mentio", "LocalStorageModule"]
+
+intralist.config ['$httpProvider', ($httpProvider) ->
+  authToken = $("meta[name=\"csrf-token\"]").attr("content")
+  $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = authToken
+]
+
+intralist.config [ 'localStorageServiceProvider' , (localStorageServiceProvider) ->
+    localStorageServiceProvider.setPrefix 'autoSave'
+]
+
+intralist.config ['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) ->
+  $routeProvider
+    .when("/",
+      templateUrl: "homepage.html"
+      controller: "HomePageCtrl"
+    )
+    .when("/about",
+      templateUrl: "about.html",
+      controller: "AboutCtrl"
+    )
+    .when("/faq",
+      templateUrl: "faq.html",
+      controller: "FaqCtrl"
+    )
+    .when("/contact",
+      templateUrl: "contact.html",
+      controller: "ContactCtrl"
+    )
+    .when("/tags/:tag",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/my-feed",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/top",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/recent",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/intralists",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/trending",
+      templateUrl: "list_groups.html"
+      controller: "ListGroupsCtrl"
+    )
+    .when("/:id",
+      templateUrl: "profile.html"
+      controller: "UsersCtrl"
+      resolve:
+        breadcrumb: ->
+          "PROFILE"
+    )
+    .when("/lists/:id",
+      templateUrl: "list_group.html"
+      controller: "ListPageCtrl"
+      resolve:
+        list_group: ["ListGroup", (ListGroup) ->
+          slug = window.location.pathname.replace("/lists/", "")
+          list_group = ListGroup.get({id: slug})
+          list_group.$promise
+        ]
+    )
+    .when("/requests/:id",
+      templateUrl: "request_list_group.html"
+      controller: "RequestPageCtrl"
+      resolve:
+        request_list_group: ["ListGroup", (ListGroup) ->
+          slug = window.location.pathname.replace("/requests/", "")
+          request_list_group = ListGroup.get({id: slug, type: "request"})
+          request_list_group.$promise
+        ]
+    )
+
+  $locationProvider.html5Mode(true);
+]
+
+intralist.run ['$rootScope', ($rootScope) ->
+  $rootScope.current_user_name = window.current_user_name
+  $rootScope.current_user_image = window.current_user_image
+  $rootScope.current_user_admin = window.current_user_admin
+]

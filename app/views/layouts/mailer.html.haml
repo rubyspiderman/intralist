@@ -1,0 +1,19 @@
+!!!
+%html
+  %head
+    %title Intralist
+  %body{:style => "font-family: Verdana;"}
+    #header{:style => "background-color: #f2f3f4; padding: 30px; font-size: 1.2em;"}
+      %table{:style => "width: 100%", :valign => "center", :cellspacing => "15", :cellpadding => "5"}
+        %tr
+          %td{:style => "cellpadding: 20px;", :valign => "center", :width => "20%"}
+            = image_tag "http://www.intralist.com/assets/intralist_logo_beta.png", :height => 28
+          %td
+            %b
+              = @user.username
+            %br
+            Here's an update of your Intralist activity.           
+    %div{:style => "border-style: none none solid none; padding: 0; border-color: #babcbd; border-width: 1px; margin-bottom: 10px; height: 1px;"}
+      
+    = yield
+    

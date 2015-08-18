@@ -1,0 +1,7 @@
+#right-column-module.set-width
+  .body
+    %h4 RELATED LISTS
+    %hr
+    %ul.most-popular
+      - @related_lists.each do |l|
+        %li= link_to l.name, list_path(l)

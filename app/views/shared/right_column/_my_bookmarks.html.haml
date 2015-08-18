@@ -1,0 +1,14 @@
+#right-column-module.set-width
+  .body
+    %h4 MY BOOKMARKS
+    %hr
+    %ol.bookmarks.lists
+      - if user.bookmarks.count > 0
+        %li.no-style{:style => "display: none"} You do not have any bookmarks yet
+        - user.bookmarks.each do |b|
+          %li
+            = link_to b.name, list_path(b.resource_id), :data => {"resource-id" => b.resource_id}
+            %a.unbookmark-list{:href => bookmark_destroy_path(:resource_id => b.resource_id, :method => "delete"), :data => {"list-id" => b.resource_id.to_s, "remote" => true} }
+              %i.icon-trash.trash-bookmark.greyed
+      - else
+        %li.no-style You do not have any bookmarks yet

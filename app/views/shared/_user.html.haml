@@ -1,0 +1,19 @@
+.media
+  .pull-left
+    %a{:href => user_path(user)}
+      = render :partial => "shared/profile_image", :locals => {:user => user}
+  .media-body
+    .media-heading
+      .span3
+        .pull-left= link_to user.username, user_path(user.username)
+        .pull-left.smaller{:style => "padding-left: 10px"}
+          %i registered on: #{user.created_at.strftime("%m/%d/%y")}
+        %br
+        .clearfix
+          Number of lists: #{link_to user.lists.count, user_profile_path(user)}
+      .span2
+        - if follows?(user)
+          = button_to "unfollow", unfollow_user_path(user), :method => 'delete', :form => {:id => 'unfollow_form'}, remote: true, :class => 'btn', :id => 'unfollow', :name => 'unfollow_button', "data-list-creator-id" => "#{user.id}"
+        - else
+          = button_to "follow", follow_user_path(user), remote: true, :form => {:id => 'follow_form'}, :class => 'btn', :id => 'follow', :name => 'follow_button', "data-list-creator-id" => "#{user.id}"
+

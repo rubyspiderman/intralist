@@ -1,0 +1,12 @@
+.modal-header.pull-left{:style => "width: 100%"}
+  %button.close{:type => "button", "ng-click" => "ok()"} &times;
+  .pull-left
+    %h4.modal-title {{listName}}
+.clear
+.modal-body
+  %carousel.photo-carousel{:id => "list-{{listId}}-carousel", "carousel-name" => "photos"}
+    <!-- Q: What is this filter syntax? -->
+    %slide{active: "item.activated", "ng-repeat" => "item in items | filter:{image_url: '!!'}", "slide-title" => "{{item.name}}"}
+      %img{"ng-src" => "{{item.image_url}}", style: "margin:auto;"}/
+      .carousel-caption
+        %h4 {{item.name}}

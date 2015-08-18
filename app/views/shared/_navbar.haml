@@ -1,0 +1,138 @@
+#slide-nav.main-navbar.navbar.navbar-default.drop-shadow.navbar-fixed-top{role: "navigation", "ng-controller" => "NavBarCtrl"}
+  .container
+    .navbar-header
+      %a.navbar-toggle{:style => "margin-right: 30px"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      .logo
+        = link_to(image_tag('intralist_logo_beta.png'), "/", :border => 0)
+    #slidemenu
+      .navbar-right
+        - if user_signed_in?
+          %ul.nav.navbar-nav.state-nav
+            %li.dropdown
+              %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                = image_tag(has_profile_image?(current_user) ? current_user.profile.avatar : asset_path("annonymous_user.jpg"), :class => 'current-user-image float-left', :width => 30)
+                %b.caret.float-left.current-user-image
+              %ul.dropdown-menu
+                %li
+                  = link_to "My Profile", "/#{current_user.username}"
+                //NOTE: Target self will force a full page reload
+                %li
+                  = link_to "Settings", edit_user_registration_path(current_user), :target => "_self"
+                %li
+                  = link_to "Connections", user_friends_path(current_user), :target => "_self"
+                %li.divider
+                %li
+                  = link_to "Logout", destroy_user_session_path, :target => "_self"
+        - else
+          %ul.nav.navbar-nav
+            %li
+              %a.login-link{:data => {:toggle => "modal", :target => "#loginModal"}} Login
+            %li
+              %a.register-link{:data => {:toggle => "modal", :target => "#registerModal"}} Register
+      %ul.nav.navbar-nav.menus
+        %li.featured.dropdown
+          = link_to "FEATURED", "#", :class => "dropdown-toggle menu-primary", :data => {:toggle => "dropdown"}
+          %ul.dropdown-menu
+            %li
+              = link_to "Home", "/"
+            %li
+              = link_to "Trending", "/trending"
+            %li
+              = link_to "Best of", "/top"
+
+        %li.discover.dropdown
+          = link_to "DISCOVER", "#", :class => "dropdown-toggle menu-primary", :data => {:toggle => "dropdown"}
+          %ul.dropdown-menu
+            %li
+              = link_to "My Feed", "/my-feed"
+            %li
+              = link_to "Recent", "/recent"
+            %li
+              = link_to "Intralists", "/intralists"
+      .col-sm-3.col-md-4.col-lg-3.col-xl-3.pull-left
+        %form.navbar-form{:role => "search", :id => 'primary-search', :action => "#{search_url}", :style => "margin-top: 12px;"}
+          .form-group
+            %input.form-control.search-input{type: "search", name: :q}
+            %button.btn.btn-default.search-submit{type: "submit"}
+              %i.glyphicon.glyphicon-search
+      %ul.nav.navbar-nav.create-nav.navbar-right
+        %li
+          - if user_signed_in?
+            %a{:href => "", "ng-click" => "toggleNewList()", :class => "create-link"} CREATE LIST
+          - else
+            %a{:href => "/users/login", :class => "create-link authenticate"} CREATE LIST
+        %li
+          - if user_signed_in?
+            %a{"ng-click" => "toggleNewRequest()", "ng-show" => "!creatingRequest", :class => "create-link"} REQUEST LIST
+          - else
+            %a{:href => "/users/login", :class => "create-link authenticate"} REQUEST LIST
+        - if user_signed_in?
+          %li
+            #user-notifications{:style => "margin-left: 15px; margin-right: 15px;"}
+              - if current_user.notifications.count > 0
+                %a{"data-toggle" => "dropdown", :role => "button"}
+                  %span.glyphicon.glyphicon-bell{:style => "margin-top: 4px; font-size: 2em"}
+                  - if current_user.notifications_count > 0
+                    %span.badge.badge-important.notifications-indicator{:style => "position: absolute; top: -10px; right: 5px;"}= current_user.notifications_count
+                .dropdown-menu{:role => "menu"}
+                  = render :partial => 'shared/notifications', :locals => {:notifications => current_user.notifications}
+                  .fixed-panel
+                    = link_to "Clear Notifications", '', :class => 'clear-notifications'
+              - else
+                %span.glyphicon.glyphicon-bell{:style => "margin-top: 4px; font-size: 2em"}
+#loginModal.modal.fade{:tabindex => "-1", :role => "dialog", "aria-labelledby" => "loginModalLabel", "aria-hidden" => true}
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header.pull-left{:style => "width: 100%"}
+        %button.close{:type => "button", :data => {:dismiss => "modal"}, "aria-hidden" => "true"} &times;
+        .pull-left 
+          %h4.modal-title{:id => "loginModalLabel"} SIGN IN
+        .pull-right{:style => "padding: 2px 10px 0 0"}
+          %a.switch-reg{:href => "#"} create account
+      .clear
+      .modal-body
+        = render :partial => "devise/sessions/form"
+        
+#registerModal.modal.fade{:tabindex => "-1", :role => "dialog", "aria-labelledby" => "registerModalLabel", "aria-hidden" => true}
+  .modal-dialog.modal-md
+    .modal-content
+      .modal-header.pull-left{:style => "width: 100%"}
+        %button.close{:type => "button", :data => {:dismiss => "modal"}, "aria-hidden" => "true"} &times;
+        .pull-left
+          %h4.modal-title{:id => "registerModalLabel"} SIGN UP
+        .pull-right{:style => "padding: 2px 10px 0 0"}
+          %a.switch-login{:href => "#"} ...or login
+      .clear
+      .modal-body
+        = render :partial => "users/registrations/form"
+
+#completeRegistrationModal.modal.fade{:tabindex => "-1", :role => "dialog", "aria-labelledby" => "completeRegistrationModalLabel", "aria-hidden" => true}
+  .modal-dialog.modal-md
+    .modal-content
+      .modal-header.pull-left{:style => "width: 100%"}
+        %button.close{:type => "button", :data => {:dismiss => "modal"}, "aria-hidden" => "true"} &times;
+        .pull-left
+          %h4.modal-title{:id => "completeRegistrationModalLabel"} Complete Registration
+      .clear
+      .modal-body
+        = render :partial => "users/registrations/complete_facebook_registration"
+
+#forgotPasswordModal.modal.fade{:tabindex => "-1", :role => "dialog", "aria-labelledby" => "forgotPasswordModalLabel", "aria-hidden" => true}
+  .modal-dialog.modal-md
+    .modal-content
+      .modal-header.pull-left{:style => "width: 100%"}
+        %button.close{:type => "button", :data => {:dismiss => "modal"}, "aria-hidden" => "true"} &times;
+        .pull-left
+          %h4.modal-title{:id => "forgotPasswordLabel"} Forgot your password?
+        .pull-right{:style => "padding: 2px 10px 0 0"}
+          %a.switch-login{:href => "#", :id => 'back-to-login'} Back to login
+      .clear
+      .modal-body
+        = render :partial => "shared/forgot_password_modal"
+
+
+= render :partial => 'shared/facebook_javascript_sdk'

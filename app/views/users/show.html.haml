@@ -1,0 +1,39 @@
+- content_for :right_column do
+  = render :partial => 'shared/right_column/follows', :locals => {:user => @user}
+  #spacer &nbsp;
+  = render :partial => 'most_popular', :locals => {:user => @user}
+%span.page-header PROFILE
+%hr.body{:style => 'margin-top: 5px'}
+.clearfix
+.media
+  .pull-left
+    .img-polaroid
+      .media-object.profile-image{:style => "background: url(#{enlarge_photo(@user)}); background-size: 100px auto; width: 100px; height: 100px;"}
+    .tiny-label{:style => "margin-top: 5px"}
+      %center
+        MEMBER SINCE:
+        %br
+        %b= @user.created_at.strftime("%B %Y").upcase
+        %br
+        %br
+        - if user_signed_in? && current_user != @user
+          - if follows?(@user)
+            = button_to "unfollow", unfollow_user_path(@user), :method => 'delete', :form => {:id => 'unfollow_form'}, remote: true, :class => 'btn', :id => 'unfollow', :name => 'unfollow_button', "data-list-creator-id" => "#{@user.id}"
+          - else
+            = button_to "follow", follow_user_path(@user), remote: true, :form => {:id => 'follow_form'}, :class => 'btn', :id => 'follow', :name => 'follow_button', "data-list-creator-id" => "#{@user.id}"
+  .media-body
+    %span.username= @user.username
+    %p.description
+      = @user.profile.description
+%hr.dotted
+%span.page-sub-header= "#{@user.username}'s Lists"
+%hr.body{:style => 'margin-top: 5px'}
+- @lists.each do |l|
+  = link_to l.name, list_path(l)
+  %em= l.created_at.strftime("%B %Y")
+  %br
+
+= paginate @lists
+
+- unless @user.profile.nil?
+  %p.hide{:id => 'user_profile', :data => {:profile => @user.profile.to_json}}

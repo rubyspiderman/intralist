@@ -1,0 +1,78 @@
+.show-request
+  .request-container
+    .a.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      .list-metadata.pull-left
+        .list-info
+          .list-user-image.pull-left
+            %a{"ng-href" => "/{{list.user.username}}"}
+              %img{"ng-src" => "{{list.user.avatar_url}}", :width => "25", :class => "pull-left creator-image"}
+          .list-user-info.pull-left
+            .pull-left
+              ="{{list.parent_list_slug && 'copied' || 'created' }} by"
+              %a{"ng-href" => "/{{list.user.username}}"}="{{list.user.username}}"  
+            .pull-left
+              .dropdown{"ng-if" => "!((current_user_name == list.user.username) && currentConnectedListIndex > 0)"}
+                .glyphicon.glyphicon-chevron-down.dropdown-toggle{:id => 'dropdownmenu1', :data => {"toggle" => "dropdown"}}
+                %ul.dropdown-menu{"aria-labelledby" => "dropdownmenu1", role: "menu"}
+                  %li{role: "presentation", "ng-if" => "current_user_name != list.user.username"}
+                    %a{href: "#", role: "menuitem", tabindex: "-1"} Follow {{list.user.username}}
+                  %li{role: "presentation", "ng-if" => "current_user_name != list.user.username"}
+                    %a{href: "#", role: "menuitem", tabindex: "-1"} Report
+                  %li{role: "presentation", "ng-if" => "current_user_name == list.user.username"}
+            %br
+            .when="{{list.created_at_in_words}}"
+        .pull-right
+          .pull-left
+            %a{"ng-click" => "backToRequest()", :class => "pull-right", "ng-if" => "props.state == 'viewingResponses'", :style => "margin-right: 5px;" } Back to Request
+          .pull-left{"ng-if" => "props.state == 'viewingResponses'", :style => "padding-left: 8px; padding-right: 8px"}
+            |
+          .pull-left
+            %a{"ng-click" => "respond()", :class => "pull-right", "ng-if" => "props.state == 'viewingResponses'"} Respond
+      .clear
+      .name-and-description
+        %h4.pull-left.list-name 
+          {{request.name}}
+          %a{"ng-href" => "/requests/{{request.slug}}", "ng-show" => "!viewingIndividual"}
+            %span.glyphicon.glyphicon-new-window.small-glyph
+        .list-description.clear
+          %div{"ng-if" => "!props.expanded", "ng-class" => "{'cursor-click' : request.description.length > 70}"} {{request.description | cut:true:70:'...'}}
+          %div{"ng-if" => "props.expanded"} {{request.description}}
+    .b.col-xs-12.col-sm-12.col-md-4.col-lg-4.col-lg-pull-8.col-md-pull-8
+      %div{"ng-include" => "'partials/item_thumbnails.html'", "ng-if" => "(props.state == 'responding') || (props.state == 'viewingResponses')"}
+      / .request-cover{"ng-if" => "props.state == 'viewingRequest'", :style => "background: url(/assets/requests.png) no-repeat"}
+      %img{:src => "/assets/requests.png", :class => "img-responsive", "ng-if" => "(props.state != 'viewingResponses')"}
+    .c.col-xs-12.col-sm-12.col-md-8.col-lg-8.col-md-push-4.col-lg-push-4
+      .new-response-form{"ng-include" => "'partials/list_form.html'",
+        "ng-controller" => "NewListCtrl",
+        "ng-if" => "props.state == 'responding'"}
+      %div{"ng-if" => "props.state == 'viewingResponses'"}
+        .clear
+        %carousel.response-carousel{"carousel-name" => "'responses'"}
+          %slide{"ng-repeat" => "response in list_group.lists"}
+            .items
+              %ol
+                %li{"ng-repeat" => "item in response.items", "ng-include" => "'partials/list_item.html'"}
+          .list-carousel-index
+            %div
+              ="Response ({{props.currentResponseIndex + 1}}/{{list_group.lists.length}})"
+        .list-controls{"ng-include" => "'partials/list_controls.html'"}
+        .clear
+        %i-share{'i-share-title' => '{{list.name}}', 'i-share-slug' => '{{list.slug}}', 'i-share-path' => 'requests'}
+        %div{:style => "height: 4px;"}
+        .clear
+        .tags
+          .pull-left Tags:
+          %span{"ng-if" => "props.state == 'viewingFreshCopy'"}
+            %a.pull-right{"ng-click" => "viewMain('prev')"}="< Back to list"
+          %span{"ng-if" => "(props.state == 'viewingConnectedList') && props.copyCreated"}
+            %a.pull-right{"ng-click" => "backToCopy()"}="Back to copy >"
+          %ul
+            %li{"ng-repeat" => "tag in list.tags"}
+              %a{:href =>"tags/\{{tag}}"}="#\{{tag}}"
+        .clear
+        .comments{"ng-controller" => "CommentsCtrl", "ng-include" => "'partials/comments.html'"}
+      .closed-bar{"ng-hide" => "props.state == 'responding' || props.state == 'viewingResponses'"}
+        .pull-left
+          %i-share{'i-share-title' => '{{list.name}}', 'i-share-slug' => '{{list.slug}}', 'i-share-path' => 'requests'}
+        %a{"ng-click" => "respond()", :class => "pull-right"} Respond
+        %a{"ng-click" => "viewResponses()", :class => "pull-right", "ng-if" => "list_group.lists.length && (props.state != 'viewingResponses')", :style => "margin-right: 5px;" } View Responses ({{list_group.lists.length}})

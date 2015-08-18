@@ -1,0 +1,55 @@
+.row
+  .col-xs-12.col-sm-6.col-md-8
+    %h1.breadcrumb SETTINGS
+    %p
+      Manage your Intralist account settings
+    = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true, :class => 'form-horizontal'}) do |f|
+      = devise_error_messages!
+      - if resource.profile.errors
+        - resource.profile.errors.full_messages.each do |msg|
+          %li{:style => 'margin-left: 5px;'}= msg
+        .control-group
+          .col-xs-6
+            = f.label "Username:", :class => "control-label"
+            .controls
+              = f.text_field :username, :class => 'form-control'
+        .clear
+        .control-group
+          .col-xs-6
+            = f.label "Email:", :class => "control-label"
+            .controls
+              = f.email_field :email, :class => 'form-control'
+        .clear
+        .control-group
+          .col-xs-6
+            %label.control-label Change Password:
+            .controls{:style => 'margin-top: 4px'}
+              %a{:href => "javascript:;", :class => 'show-password-fields'} Click here
+              to change your password
+              .password-fields{:style => 'display: none; margin-top: 8px'}
+                = f.password_field :password, :placeholder => "Enter new password", :class => 'form-control'
+                .clear{:style => "height: 5px"}
+                = f.password_field :password_confirmation, :placeholder => "Confirm new password", :class => 'form-control'
+        .clear
+        .control-group
+          .col-xs-6
+            %label.control-label Notifications:
+            .controls
+              %label.checkbox
+                = f.check_box :send_notification_email
+                Receive email digests
+        .clear
+        .control-group
+          .col-xs-6
+            %label.control-label
+            .controls
+              = f.submit "Update", :class => "btn btn-primary"
+        .clear
+        %br
+  .col-xs-12.col-md-4
+    %br
+    %p 
+      Need to update your avatar or edit profile info?  
+      %br
+      Do it directly on <a href='/users/#{current_user.username}'>your profile page</a>
+

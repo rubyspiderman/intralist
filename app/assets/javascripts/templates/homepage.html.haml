@@ -1,0 +1,35 @@
+#home{"i-scroll" => "loadMore()"}
+  .col-xs-12.col-sm-12.col-md-12.col-lg-12.col-xl-12
+    %h1 Welcome to Intralist
+    %i-tag-rotator{'taglines' => "taglines"}
+    .clear
+    %i.throbber.home{"ng-show" => "props.loading"}
+  %div{"ng-repeat" => "list in lists"}
+    %div{"ng-if" => "$index == 2" }
+      .col-xs-12.col-sm-6.col-md-6.col-lg-4.col-xl-4
+        .list-tile.top-trending
+          .inner
+            .solid
+              %p TODAY'S TOP TRENDING LISTS
+              %ol
+                %li{"ng-repeat" => "list in lists | limitTo:5"} 
+                  %a{"ng-href" => "/lists/{{list.slug}}"}{{list.name}}
+    .col-xs-12.col-sm-6.col-md-6.col-lg-4.col-xl-4
+      .list-tile
+        .inner
+          %a{"ng-href" => "/lists/{{list.slug}}"}
+            .cover-image{:style => "background-image: url({{list.items[0].image_small_url ? list.items[0].image_small_url : 'assets/no_item_photo.gif'}})"}
+          .list-metadata
+            .pull-left
+              %a{"ng-href" => "/{{list.user.username}}"}
+                %img{"ng-src" => "{{list.user.avatar_url}}", :width => "25", :class => "creator-image"}
+            .pull-left.created-by
+              ="{{list.parent_list_id && 'copied' || 'created' }} by"
+              %a{"ng-href" => "/{{list.user.username}}"}="{{list.user.username}}"
+            .pull-right.time-created="{{list.created_at_in_words}}"
+          .clear
+          .title-container
+            .title
+              %a{:href => "/lists/{{list.slug}}"} {{list.name}}
+            .content-source-name
+              %a{:href => "{{list.content_source_url | hrefUrl}}", :target => "_blank"} {{list.content_source_name | uppercase}}

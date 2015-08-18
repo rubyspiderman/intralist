@@ -1,0 +1,103 @@
+#profile{"i-scroll" => "loadMore()"}
+  .row
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+      %h1.breadcrumb.pull-left {{breadcrumb}}
+      / need to make canceleditdescription restore ALL fields.  Relabel these functions too as they do more then just deal with description
+      %a{:class => "bordered-button pull-right edit-profile-button", "ng-click" => "editProfile()", "ng-show" => "myProfile() && (editState == false)"} 
+        EDIT PROFILE
+      %a{:class => "bordered-button pull-right edit-profile-button", "ng-show" => "editState", "ng-click" => "updateProfile()"}
+        SAVE
+      %a{:class => "bordered-button pull-right edit-profile-button", "ng-click" => "editState = !editState", "ng-show" => "myProfile() && editState"}
+        %span{"ng-click" => "cancelEditProfile();"} CANCEL
+  .row
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+      #profile
+        .dark-border
+          .row
+            .col-lg-3
+              %center
+                .large-profile-image-cont
+                  .large-profile-image{:style => "background-image: url('{{facebookLarge()}}')", "ng-if" => "user.profile.image_display == 'facebook'"}
+                    &nbsp;
+                  .large-profile-image{:style => "background-image: url('{{user.profile.image.image.url}}')", "ng-if" => "user.profile.image_display == 'upload'"}
+                    &nbsp;
+                  .large-profile-image{:style => "background-image: url('/assets/annonymous_user.jpg')", "ng-if" => "!user.profile.image_display"}
+                    &nbsp;
+                  .progress.progress-striped.active{"ng-show" => "showProgressBar"}
+                    .progress-bar.progress-bar-info{:role => "progressbar", "aria-valuenow" => "uploadProgress", "aria-valuemin" => "0", "aria-valuemax" => "100", :style => "width: {{uploadProgress}}%"}
+                      %span.sr-only {{uploadProgress}}% Complete
+                  .edit-photo{"ng-show" => "editState", "ng-click" => "showProfilePicPop = !showProfilePicPop"}
+                    .center
+                      edit photo
+                      %br
+                      %span.glyphicon.glyphicon-camera
+                  / TODO: if facebook, add this on to the url &height=215
+                  .edit-profile-pic-pop{"ng-show" => "showProfilePicPop"}
+                    .arrow-up
+                    %div{"ng-include" => "'partials/edit_profile_pic.html'"}
+                %button{"ng-click" => "setFollower()", "ng-hide" => "myProfile() || !current_user_name", :class => "btn btn-primary btn-follow"}
+                  {{ props.followsUser ? 'UNFOLLOW' : 'FOLLOW' }}
+              %br
+            .col-lg-6.profile-container
+              %form
+                .username {{user.username}}
+                .description{"ng-hide" => "editState"}
+                  %p{"ng-show" => "user.profile.description"}
+                    {{user.profile.description}}
+                  %p{"ng-show" => "myProfile() && !user.profile.description"}
+                    {{user.username}}, things are looking... How shall we put this, 'sparse?'
+                    %br  
+                    %a{"ng-click" => "editState = !editState"} edit your profile
+                %textarea.form-control{:rows => "4", "ng-model" => "user.profile.description", "ng-show" => "editState", :style => "margin-top: 12px", :placeholder => "Add a description"}
+                .location{"ng-hide" => "editState"}
+                  %span.glyphicon.glyphicon-map-marker{"ng-show" => "user.profile.location"} 
+                  {{user.profile.location}}
+                %input.form-control{:type=>"text", "ng-model" => "user.profile.location", "ng-show" => "editState", :style => "margin-top: 15px; padding-left: 35px", :placeholder => "Your location"}
+                  %span.glyphicon.glyphicon-map-marker{:style => "position: relative; top: -1.5em; left: 10px;", "ng-show" => "editState"}
+                .link{"ng-hide" => "editState"} 
+                  %span.glyphicon.glyphicon-link{"ng-show" => "user.profile.link"}
+                  %a{"ng-href" => "{{user.profile.link | hrefUrl}}"}
+                    {{user.profile.link}}
+                %input.form-control{:type=>"text", "ng-model" => "user.profile.link", "ng-show" => "editState", :style => "padding-left: 35px", :placeholder => "link to your website"}
+                  %span.glyphicon.glyphicon-link{:style => "position: relative; top: -1.5em; left: 10px;", "ng-show" => "editState"}
+            .col-lg-2
+
+
+  .row
+    .col-xs-12.col-sm-12.col-md-12
+      %ul.page-navigator
+        %li
+          %a{"ng-click" => "showList = true; showRequest = false; showBookmarks = false;", "ng-class" => "{active: showList == true}"} LISTS
+        %li 
+          %a{"ng-click" => "showRequests(); showList = false; showRequest = true; showBookmarks = false;", "ng-class" => "{active: showRequest == true}"} REQUESTS
+        %li
+          %a{"ng-click" => "showBookmarks(); showBookmarks = true; showList = false; showRequest = false;", "ng-class" => "{active: showBookmarks == true}"} BOOKMARKS
+  .row
+    .col-xs-12.col-sm-6.col-md-8
+      %i.throbber.profile{"ng-show" => "props.loading", "style" => "position: fixed; bottom: 0;"}
+      %div{"ng-if" => 'showList == true || showRequest == true', "ng-include" => "'partials/list_groups.html'"}
+      %div{"ng-if" => 'showRequest == true', "ng-include" => "'partials/request_groups.html'"}
+      %div{"ng-if" => 'showBookmarks == true', "ng-include" => "'partials/bookmarks.html'"}
+    .col-xs-6.col-md-4
+      #right-column
+        #follows.bordered
+          %tabs
+            %pane{title: "Following ({{user.following_count || 0}})"}
+              .clear
+              %input{"ng-model" => "searchText", :class => 'form-control', :placeholder => "Search"}
+              %ul.follow-list
+                %li{"ng-repeat" => "following in user.following | filter:searchText", :class => "follow-list-item"}
+                  %a{:href => "/{{following.username}}", :tooltip => "{{following.username}}"}
+                    %img{"ng-src" => "{{following.image}}", :class => 'follow-image', :alt => '{{following.username}}', :border => 0}
+            %pane{title: "Followers ({{user.follower_count || 0}})"}
+              .clear
+              %input{"ng-model" => "searchText", :class => 'form-control', :placeholder => "Search"}
+              %ul.follow-list
+                %li{"ng-repeat" => "follower in user.followers | filter:searchText", :class => "follow-list-item"}
+                  %a{:href => "/{{follower.username}}", :tooltip => '{{follower.username}}'}
+                    %img{"ng-src" => "{{follower.image}}", :class => 'follow-image', :alt => '{{follower.username}}', :border => 0}
+        .clear
+        %br
+        %tip
+        %div{"ng-include" => "'partials/footer.html'"}
+        .clear

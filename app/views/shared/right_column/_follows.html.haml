@@ -1,0 +1,12 @@
+#right-column-module.set-width
+  .body
+    %ul.module-nav
+      %li.active= link_to "Following (#{@user.following.count})", user_following_index_path(@user), :class => "get-following", :remote => true
+      %li.margin
+        |
+      %li= link_to "Followers (#{@user.followers.count})", user_followers_path(@user), :class => "get-followers", :remote => true
+    .clearfix
+    #header
+    = text_field_tag "term", "", :placeholder => "filter usernames ", :class => "filterinput"
+    #results
+      = render :partial => "shared/right_column/follows_collection", :locals => {:follows => @user.following}

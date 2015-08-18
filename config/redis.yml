@@ -1,0 +1,10 @@
+test:
+  host: localhost
+  port: 6379
+development:
+  host: localhost
+  port: 6379
+production:
+  host: pub-redis-14941.us-east-1-3.3.ec2.garantiadata.com
+  port: 14941
+  password: iPFvAs69V1wtoHDJ

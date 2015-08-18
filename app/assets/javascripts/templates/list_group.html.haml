@@ -1,0 +1,12 @@
+.row
+  .col-xs-12.col-sm-6.col-md-8
+    #lists
+      .list.row{"ng-controller" => "ListGroupCtrl", "ng-include" => "'partials/list_group.html'", "ng-if" => "!list_group.request"}
+      .request.row{"ng-controller" => "RequestListGroupCtrl", "ng-include" => "'partials/request_list_group.html'", "ng-if" => "list_group.request"}
+  .col-xs-6.col-md-4
+    #right-column
+      .spacer
+      %div{"ng-include" => "'partials/related_lists.html'"}
+      %div{"ng-include" => "'partials/lists_by_user.html'"}
+      .spacer
+      %div{"ng-include" => "'partials/footer.html'"}

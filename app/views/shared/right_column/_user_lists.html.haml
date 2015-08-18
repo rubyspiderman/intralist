@@ -1,0 +1,7 @@
+#right-column-module.set-width
+  .body
+    %h4 OTHER LISTS BY THIS USER
+    %hr
+    %ol.most-popular
+      - @most_popular.each do |l|
+        %li= link_to l.name, list_path(l)

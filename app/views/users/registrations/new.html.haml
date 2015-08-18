@@ -1,0 +1,20 @@
+.row
+  .col-xs-12.col-sm-6.col-md-8
+    - if session[:omniauth]
+      %h2 Complete Your Account Creation
+      %p= "Welcome #{session[:omniauth].info.name}!  We need a username and email address to get you on your way"
+      .pull-left{:style => "margin-top: 6px"}
+        = image_tag session[:omniauth].info.image
+      .pull-left{:style => "margin-left: 15px"}
+        = form_for(resource, :as => resource_name, :url => registration_path(resource_name, :class => "form-inline")) do |f|
+          = devise_error_messages!
+          .form-group
+            %label Username:
+            = f.text_field :username, :class => "form-control"
+          .form-group
+            %label Email:
+            = f.email_field :email, :class => "form-control"
+          .form-group
+            = f.submit "SIGN UP", :class => 'btn btn-primary pull-right'
+%br
+%br
